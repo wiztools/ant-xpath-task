@@ -6,3 +6,7 @@ This project does not have any third-party dependency (the original project had 
 
 Forked for use with [RESTClient](https://github.com/wiztools/rest-client).
 
+## Usage
+
+See [example](https://github.com/wiztools/ant-xpath-task/blob/master/ant-test.xml).
+
