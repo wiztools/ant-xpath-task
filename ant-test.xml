@@ -1,0 +1,14 @@
+<project name="xpath-test" default="run">
+    <taskdef name="xpath" classname="org.wiztools.ant.xpath.XPathTask"
+             classpath="target/ant-xpath-task-1.0-SNAPSHOT.jar"/>
+    <target name="run">
+        <xpath document="pom.xml"
+               xpath="/project/dependencies/dependency/groupId"
+               outputproperty="groupIds"
+               multinoderesult="true"/>
+        <echo>${groupIds}</echo>
+        <xpath document="pom.xml"
+               xpath="/project/version" outputproperty="pomVersion"/>
+        <echo>${pomVersion}</echo>
+    </target>
+</project>
