@@ -9,90 +9,95 @@ import org.apache.tools.ant.Task;
 
 public class XPathTask extends Task {
 
-   private String outputProperty = "output";
-   private String document;
-   private String xpath;
-   private String defaultValue="";
-   private XPathEvaluator evaluator;
-   private String delimiter = " ";
-   private Boolean multiNodeResult = Boolean.FALSE;
-   
-   public XPathTask() {
-      this(new JAXPXPathEvaluator());
-   }
+    private String outputProperty = "output";
+    private String document;
+    private String xpath;
+    private String defaultValue = "";
+    private XPathEvaluator evaluator;
+    private String delimiter = " ";
+    private Boolean multiNodeResult = Boolean.FALSE;
 
-   public XPathTask(XPathEvaluator evaluator) {
-      this.evaluator = evaluator;
-   }
+    public XPathTask() {
+        this(new JAXPXPathEvaluator());
+    }
 
-   @Override
-   public void execute() throws BuildException {
-      checkWeSet(xpath, "xpath");
-      checkWeSet(document, "document");
-      try {
+    public XPathTask(XPathEvaluator evaluator) {
+        this.evaluator = evaluator;
+    }
 
-         final String value = collect(evaluator.evaluate(xpath, new FileReader(document), multiNodeResult));
+    @Override
+    public void execute() throws BuildException {
+        checkWeSet(xpath, "xpath");
+        checkWeSet(document, "document");
+        
+        try {
 
-         if (value == null || value.trim().length()==0) {
-            setProperty(outputProperty, defaultValue);
-         } else {
-            setProperty(outputProperty, value);
-         }
+            final String value = collect(evaluator.evaluate(
+                    xpath, new FileReader(document), multiNodeResult));
 
-      } catch (XPathEvaluatorException e) {
-         throw new BuildException(e);
-      } catch (FileNotFoundException e) {
-         throw new BuildException("could not find file "+document, e);
-      } 
-   }
+            if (value == null || value.trim().length() == 0) {
+                setProperty(outputProperty, defaultValue);
+            }
+            else {
+                setProperty(outputProperty, value);
+            }
 
-   private String collect(String[] values) {
-      String result = "";
-      for (String value: values) {
-         result += value + delimiter;
-      }
-      result = result.substring(0, result.length() - delimiter.length());
-      return result;
-   }
+        }
+        catch (XPathEvaluatorException e) {
+            throw new BuildException(e);
+        }
+        catch (FileNotFoundException e) {
+            throw new BuildException("Could not find file: " + document, e);
+        }
+    }
 
-   private void checkWeSet(String argument, String name) {
-      if (argument == null) {
-         throw new BuildException(name+" is required but has not been set");
-      }
-   }
+    private String collect(String[] values) {
+        String result = "";
+        for (String value : values) {
+            result += value + delimiter;
+        }
+        result = result.substring(0, result.length() - delimiter.length());
+        return result;
+    }
 
-   private void setProperty(String name, String value) {
-      getProject().setProperty(name, value);
-   }
-   
-   public void setOutputProperty(String outputProperty) {
-      log("Setting the output property: " + outputProperty, Project.MSG_VERBOSE);
-      this.outputProperty = outputProperty;
-   }
-   
-   public void setDocument(String document) {
-      log("evaluating in document: " + document, Project.MSG_VERBOSE);
-      this.document = document;
-   }
-   
-   public void setXpath(String xpath) {
-      log("evaluating xpath: " + xpath, Project.MSG_VERBOSE);
-      this.xpath = xpath;
-   }
-   
-   public void setMultiNodeResult(Boolean result) {
-       log("multi-node xpath result: " + result, Project.MSG_VERBOSE);
-       this.multiNodeResult = result;
-   }
+    private void checkWeSet(String argument, String name) {
+        if (argument == null) {
+            throw new BuildException(name + " is required but has not been set");
+        }
+    }
 
-   public void setDelimiter(String delimiter) {
-       log("xpath multi-result delimiter: " + delimiter, Project.MSG_VERBOSE);
-       this.delimiter = delimiter;
-   }
+    private void setProperty(String name, String value) {
+        getProject().setProperty(name, value);
+    }
 
-   public void setDefaultValue(String defaultValue) {
-      log("defaultValue: " + defaultValue, Project.MSG_VERBOSE);
-      this.defaultValue = defaultValue;
-   }
+    public void setOutputProperty(String outputProperty) {
+        log("Setting the output property: " + outputProperty, Project.MSG_VERBOSE);
+        this.outputProperty = outputProperty;
+    }
+
+    public void setDocument(String document) {
+        log("evaluating in document: " + document, Project.MSG_VERBOSE);
+        this.document = document;
+    }
+
+    public void setXpath(String xpath) {
+        log("evaluating xpath: " + xpath, Project.MSG_VERBOSE);
+        this.xpath = xpath;
+    }
+
+    public void setMultiNodeResult(Boolean result) {
+        log("multi-node xpath result: " + result, Project.MSG_VERBOSE);
+        this.multiNodeResult = result;
+    }
+
+    public void setDelimiter(String delimiter) {
+        log("xpath multi-result delimiter: " + delimiter, Project.MSG_VERBOSE);
+        this.delimiter = delimiter;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        log("defaultValue: " + defaultValue, Project.MSG_VERBOSE);
+        this.defaultValue = defaultValue;
+    }
 
 }

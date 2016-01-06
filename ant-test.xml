@@ -11,17 +11,20 @@
 
         <!-- Single-result Example -->
         <xpath document="pom.xml"
-               xpath="/project/version" outputproperty="pomVersion"/>
+               xpath="/project/version"
+               outputproperty="pomVersion"/>
         <echo>${pomVersion}</echo>
 
         <!-- when there is no match on the path -->
         <xpath document="pom.xml"
-               xpath="/project/undefined" outputproperty="undefinedNoDefault"/>
+               xpath="/project/undefined"
+               outputproperty="undefinedNoDefault"/>
         <echo>${undefinedNoDefault}</echo>
 
         <!-- when there is no match on the path using the defaultValue property -->
         <xpath document="pom.xml"
-               xpath="/project/undefined" outputproperty="undefinedWithDefault"
+               xpath="/project/undefined"
+               outputproperty="undefinedWithDefault"
                defaultValue="not found"/>
         <echo>${undefinedWithDefault}</echo>
     </target>
