@@ -12,6 +12,7 @@ public class XPathTask extends Task {
    private String outputProperty = "output";
    private String document;
    private String xpath;
+   private String defaultValue="";
    private XPathEvaluator evaluator;
    private String delimiter = " ";
    private Boolean multiNodeResult = Boolean.FALSE;
@@ -29,7 +30,15 @@ public class XPathTask extends Task {
       checkWeSet(xpath, "xpath");
       checkWeSet(document, "document");
       try {
-         setProperty(outputProperty, collect(evaluator.evaluate(xpath, new FileReader(document), multiNodeResult)));
+
+         final String value = collect(evaluator.evaluate(xpath, new FileReader(document), multiNodeResult));
+
+         if (value == null || value.trim().length()==0) {
+            setProperty(outputProperty, defaultValue);
+         } else {
+            setProperty(outputProperty, value);
+         }
+
       } catch (XPathEvaluatorException e) {
          throw new BuildException(e);
       } catch (FileNotFoundException e) {
@@ -80,4 +89,10 @@ public class XPathTask extends Task {
        log("xpath multi-result delimiter: " + delimiter, Project.MSG_VERBOSE);
        this.delimiter = delimiter;
    }
+
+   public void setDefaultValue(String defaultValue) {
+      log("defaultValue: " + defaultValue, Project.MSG_VERBOSE);
+      this.defaultValue = defaultValue;
+   }
+
 }
